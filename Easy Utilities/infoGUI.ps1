@@ -1,4 +1,4 @@
-﻿Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 [System.Windows.Forms.Application]::EnableVisualStyles()
@@ -85,6 +85,12 @@ $osInfo.Location = New-Object System.Drawing.Point(334,100)
 $osInfo.Size = New-Object System.Drawing.Size(300,23)
 $osInfo.Text = 'System Info'
 $form.Controls.Add($osInfo)
+
+$iconSweep = New-Object System.Windows.Forms.Button
+$iconSweep.Location = New-Object System.Drawing.Point(334,125)
+$iconSweep.Size = New-Object System.Drawing.Size(300,23)
+$iconSweep.Text = 'Remove all desktop shortcuts'
+$form.Controls.Add($iconSweep)
 
 $iconf.Add_Click(
 
@@ -181,9 +187,19 @@ $clearEdge.Add_click(
         
 )
 $osInfo.Add_click(
-{   
-    & .\sysparams.ps1
-}     
+    {   
+        & .\sysparams.ps1
+    }     
+)
+
+$iconSweep.Add_click(
+    {
+        $desktop = [System.Environment]::GetFolderPath('Desktop')
+        $desktopFiles = Get-ChildItem -Path $desktop -Recurse -Include *.lnk
+        foreach ($file in $desktopFiles){
+            Remove-Item -Path $file.FullName -Force -Verbose
+        }
+    }
 )
 
 $form.Topmost = $true
@@ -191,5 +207,3 @@ $form.Topmost = $true
 $form.Add_Shown({$form.Activate()})
 
 $form.ShowDialog()
-
-
