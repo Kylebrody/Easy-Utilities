@@ -6,7 +6,7 @@ $computerInfo = Get-ComputerInfo
 $outputLines = New-Object System.Collections.Generic.List[System.String]
 
 foreach ($property in $Strings) {
-	$property = $property.Trim()  # Trim any leading or trailing whitespace
+	$property = $property.Trim()  
 	if ($computerInfo.PSObject.Properties[$property]) {
 		$value = $computerInfo.PSObject.Properties[$property].Value
 		$outputLines.Add("$property : $value")
